@@ -25,5 +25,6 @@
 	"searchable": true,
 	"stepSoundGroup": "staxel.sounds.WoodFootSteps",
 	"voxels": "mods/BulletinBoard/Models/BulletinBoard.qb",
-	"tileStateKind": "mods.bulletinboard.tileState.BulletinBoard"
+	"tileStateKind": "mods.bulletinboard.tileState.BulletinBoard",
+	"prefetchTileState": true
 }

@@ -49,18 +49,24 @@ namespace BulletinBoard.Rendering
 				graphics.SetTexture(WorldTextRenderer.FontTexture);
 				graphics.SetRasterizerState(CullMode.None);
 
+				Color[] colors = new Color[] { Color.AliceBlue, Color.Azure, Color.Bisque, Color.Blue, Color.Coral, Color.DarkGreen, Color.Firebrick, Color.Green, Color.Honeydew, Color.IndianRed, Color.LightSalmon, Color.Maroon, Color.Olive, Color.Orange, Color.Purple };
+
 				foreach (TextDrawCall3D drawCall in this._drawCalls)
 				{
 					float spacer = 0f;
+					int i = 0;
+
 					foreach (char c in drawCall.Message)
 					{
 						if (WorldTextRenderer.Drawables.TryGetValue(c, out TextureVertexDrawable textureVertexdrawable) && WorldTextRenderer.CharacterMap.TryGetValue(c, out FontChar fontchar))
 						{
+							Color col = colors.Length > i ? colors[i] : Color.White;
+							textureVertexdrawable = this.BuildDrawable(fontchar, col);
+
 							Vector3D charOffset = new Vector3D((double)((float)fontchar.XOffset * WorldTextRenderer.Units * 2f), 0.0, 0.0);
 							Vector3D spacingOffset = new Vector3D((double)spacer + (float)fontchar.Width * WorldTextRenderer.Units, 0.0, 0.0);
 
 							Vector3F delta = (drawCall.Location - renderOrigin).ToVector3F();
-
 							Vector2F flatDelta = new Vector2F(delta.X, delta.Z);
 							float numberRotate = flatDelta.ToAngle() + 3.14159274f;
 							float rotation = ((float)drawCall.rotation + 2f) * 3.14159274f * 0.5f;
@@ -76,6 +82,7 @@ namespace BulletinBoard.Rendering
 								.Multiply(matrix));
 
 							spacer += (float)fontchar.Width * WorldTextRenderer.Units * 2f;
+							i++;
 						}
 					}
 				}
@@ -97,7 +104,7 @@ namespace BulletinBoard.Rendering
 			this._drawCalls.Add(new TextDrawCall3D(message, location, rotation));
 		}
 
-		private TextureVertexDrawable BuildDrawable(FontChar fontChar)
+		private TextureVertexDrawable BuildDrawable(FontChar fontChar, Color col)
 		{
 			Vector4F vec = new Vector4F( // Pixel coords to uv coords
 				(float)fontChar.X / (float)WorldTextRenderer.FontTexture.Width,
@@ -110,10 +117,10 @@ namespace BulletinBoard.Rendering
 			float fHeight = (float)fontChar.Height * WorldTextRenderer.Units;
 
 			TextureVertex[] vertices = new TextureVertex[4];
-			vertices[0].Color = Color.White;
-			vertices[1].Color = Color.White;
-			vertices[2].Color = Color.White;
-			vertices[3].Color = Color.White;
+			vertices[0].Color = col;
+			vertices[1].Color = col;
+			vertices[2].Color = col;
+			vertices[3].Color = col;
 
 			vertices[0].Position = new Vector3F(0f - fWidth, 0f - fHeight, 0f);
 			vertices[1].Position = new Vector3F(0f - fWidth, fHeight, 0f);
@@ -154,7 +161,7 @@ namespace BulletinBoard.Rendering
 			{
 				char c = (char)fChar.ID;
 				WorldTextRenderer.CharacterMap.Add(c, fChar);
-				WorldTextRenderer.Drawables.Add(c, this.BuildDrawable(fChar));
+				WorldTextRenderer.Drawables.Add(c, this.BuildDrawable(fChar, Color.White));
 			}
 		}
 	}

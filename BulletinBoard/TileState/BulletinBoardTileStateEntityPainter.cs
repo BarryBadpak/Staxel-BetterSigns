@@ -64,6 +64,12 @@ namespace BulletinBoard.TileState
 		}
 
 		public override void StartEmote(Entity entity, Timestep renderTimestep, EmoteConfiguration emote) {}
-		protected override void Dispose(bool disposing) {}
+		protected override void Dispose(bool disposing) {
+
+			if (disposing && this.WorldTextRenderer != null)
+			{
+				//this.WorldTextRenderer.Dispose();
+			}
+		}
 	}
 }
