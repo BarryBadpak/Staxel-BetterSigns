@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Plukit.Base;
 
 namespace BulletinBoard.Rendering
 {
@@ -30,7 +31,6 @@ namespace BulletinBoard.Rendering
 		{
 			this._fontRenderer.DrawText(_spriteBatch, (int)pos.X, (int)pos.Y, message);
 		}
-
 	}
 
 
@@ -390,6 +390,15 @@ namespace BulletinBoard.Rendering
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Returns the location & width,height as a Vector4I
+		/// </summary>
+		/// <returns></returns>
+		public Vector4I GetVector4I()
+		{
+			return new Vector4I(this.X, this.Y, this.Width, this.Height);
 		}
 	}
 

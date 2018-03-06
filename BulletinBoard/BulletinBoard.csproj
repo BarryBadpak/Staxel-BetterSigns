@@ -65,7 +65,8 @@
     <Compile Include="BulletinBoardManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\BmFont.cs" />
-    <Compile Include="Rendering\TextDrawCall3D.cs" />
+    <Compile Include="Rendering\BmFontAlign.cs" />
+    <Compile Include="Rendering\BmFontDrawCall.cs" />
     <Compile Include="Rendering\WorldTextRenderer.cs" />
     <Compile Include="TileState\BulletinBoardTileStateBuilder.cs" />
     <Compile Include="TileState\BulletinBoardTileStateEntityBuilder.cs" />

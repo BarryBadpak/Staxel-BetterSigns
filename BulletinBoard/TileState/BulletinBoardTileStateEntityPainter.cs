@@ -1,5 +1,7 @@
 ﻿using BulletinBoard.Rendering;
+using Microsoft.Xna.Framework;
 using Plukit.Base;
+using Staxel;
 using Staxel.Client;
 using Staxel.Draw;
 using Staxel.Logic;
@@ -13,7 +15,8 @@ using System.Threading.Tasks;
 namespace BulletinBoard.TileState
 {
 	class BulletinBoardTileStateEntityPainter : EntityPainter
-	{ 
+	{
+		private Vector3D BoardOffset = new Vector3D(0.25, 0, 0.01);
 		private WorldTextRenderer WorldTextRenderer = new WorldTextRenderer();
 		private BillboardNumberRenderer BillboardRenderer = new BillboardNumberRenderer();
 		private bool _initialised = false;
@@ -29,21 +32,8 @@ namespace BulletinBoard.TileState
 		/// <param name="avatarController"></param>
 		/// <param name="renderTimestep"></param>
 		public override void BeforeRender(DeviceContext graphics, Vector3D renderOrigin, Entity entity, AvatarController avatarController, Timestep renderTimestep) {
-			//this.WorldTextRenderer.Purge();
-		}
 
-		public override void Render(DeviceContext graphics, Matrix4F matrix, Vector3D renderOrigin, Entity entity, AvatarController avatarController, Timestep renderTimestep, RenderMode renderMode)
-		{
-			if (renderMode == RenderMode.Normal)
-			{
-				this.WorldTextRenderer.Draw(graphics, renderOrigin, matrix);
-			}
-		}
-
-		public override void RenderUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade, int updateSteps) {}
-
-		public override void ClientPostUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade) { }
-		public override void ClientUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade) {
+			WorldTextRenderer.Init(graphics);
 
 			if (!this._initialised)
 			{
@@ -57,11 +47,27 @@ namespace BulletinBoard.TileState
 						this._rotation = (logic.GetVariation() >> 10) & 3;
 						this._initialised = true;
 
-						this.WorldTextRenderer.DrawString("De kat krabt de krullen van de trap.", this._position, this._rotation);
+						Color[] colors = new Color[] { Color.AliceBlue, Color.Azure, Color.Bisque, Color.Blue, Color.Coral, Color.DarkGreen, Color.Firebrick, Color.Green, Color.Honeydew, Color.IndianRed, Color.LightSalmon, Color.Maroon, Color.Olive, Color.Orange, Color.Purple };
+						int colorIdx = GameContext.RandomSource.Next(colors.Length);
+						float scale = GameContext.RandomSource.NextFloat(0.5f, 2.5f);
+						this.WorldTextRenderer.DrawString("Abcdefghijklmnopqrstuvwxyz.,!? aapje boop bam 123", this._position, this.BoardOffset, scale, this._rotation, colors[colorIdx]);
 					}
 				}
 			}
+			//this.WorldTextRenderer.Purge();
 		}
+
+		public override void Render(DeviceContext graphics, Matrix4F matrix, Vector3D renderOrigin, Entity entity, AvatarController avatarController, Timestep renderTimestep, RenderMode renderMode)
+		{
+			if (renderMode == RenderMode.Normal)
+			{
+				this.WorldTextRenderer.Draw(graphics, renderOrigin, matrix);
+			}
+		}
+
+		public override void RenderUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade, int updateSteps) {}
+		public override void ClientPostUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade) { }
+		public override void ClientUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade) {}
 
 		public override void StartEmote(Entity entity, Timestep renderTimestep, EmoteConfiguration emote) {}
 		protected override void Dispose(bool disposing) {
