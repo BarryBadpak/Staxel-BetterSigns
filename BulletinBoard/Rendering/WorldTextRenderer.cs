@@ -169,6 +169,23 @@ namespace BulletinBoard.Rendering
 			return new TextureVertexDrawable(vertices, verticesCount);
 		}
 
+        private TextureVertexDrawable buildDrawable(string text, Vector4F textBox, BmFontAlign alignment, Color color, float scale)
+        {
+            int verticesCount = text.Length * 4;
+            TextureVertex[] vertices = new TextureVertex[verticesCount];
+            List<int[]> lines = new List<int[]>();
+
+            float x = 0f;
+            int i = 0;
+            foreach(char l in text)
+            {
+
+            }
+
+
+            return new TextureVertexDrawable(vertices, verticesCount);
+        }
+
 		/// <summary>
 		/// Converts a font char Vector4I to uv coordinates
 		/// </summary>
