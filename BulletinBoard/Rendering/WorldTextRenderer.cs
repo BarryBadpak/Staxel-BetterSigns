@@ -17,8 +17,8 @@ namespace BulletinBoard.Rendering
 	{
 		private static float Units = 0.06f / 36f;
 		private static Texture2D FontTexture;
-		private static FontFile FontFile;
-		private static Dictionary<char, FontChar> CharacterMap = new Dictionary<char, FontChar>();
+		private static BmFontFile FontFile;
+		private static Dictionary<char, BmFontChar> CharacterMap = new Dictionary<char, BmFontChar>();
 
 		private List<BmFontDrawCall> _drawCalls = new List<BmFontDrawCall>();
 
@@ -116,13 +116,21 @@ namespace BulletinBoard.Rendering
 		/// <param name="location"></param>
 		/// <param name="rotation"></param>
 		/// <param name="color"></param>
-		public void DrawString(string text, Vector4F textBox, BmFontAlign alignment, Vector3D offset, Vector3D location, float scale, uint rotation, Color color)
+		public void DrawString(string text, Vector2F textBox, BmFontAlign alignment, Vector3D offset, Vector3D location, float scale, uint rotation, Color color)
 		{
-			this._drawCalls.Add(new BmFontDrawCall(this.BuildDrawable(text, color, scale), location, offset, rotation));
+			this._drawCalls.Add(new BmFontDrawCall(this.BuildDrawable(text, textBox, alignment, color, scale), location, offset, rotation));
 		}
 
+		/// <summary>
+		/// Build a TextureVertexDrawable from the text
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="color"></param>
+		/// <param name="scale"></param>
+		/// <returns></returns>
 		private TextureVertexDrawable BuildDrawable(string text, Color color, float scale = 1f)
 		{
+			float UnitScale = WorldTextRenderer.Units * scale;
 			int verticesCount = text.Length * 4;
 			TextureVertex[] vertices = new TextureVertex[verticesCount];
 
@@ -130,10 +138,9 @@ namespace BulletinBoard.Rendering
 			int i = 0;
 			foreach (char l in text)
 			{
-				if (WorldTextRenderer.CharacterMap.TryGetValue(l, out FontChar fontChar))
+				if (WorldTextRenderer.CharacterMap.TryGetValue(l, out BmFontChar fontChar))
 				{
 					Vector4F UVPos = this.CharPositionToUV(fontChar.GetVector4I());
-					float UnitScale = WorldTextRenderer.Units * scale;
 
 					float xOffset = fontChar.XOffset * UnitScale;
 					float yOffset = fontChar.YOffset * UnitScale;
@@ -169,19 +176,170 @@ namespace BulletinBoard.Rendering
 			return new TextureVertexDrawable(vertices, verticesCount);
 		}
 
-        private TextureVertexDrawable buildDrawable(string text, Vector4F textBox, BmFontAlign alignment, Color color, float scale)
+		/// <summary>
+		/// Build a TextureVertexDrawable from the text where it is contained within a region
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="textBox"></param>
+		/// <param name="alignment"></param>
+		/// <param name="color"></param>
+		/// <param name="scale"></param>
+		/// <returns></returns>
+        private TextureVertexDrawable BuildDrawable(string text, Vector2F textBox, BmFontAlign alignment, Color color, float scale)
         {
-            int verticesCount = text.Length * 4;
+			float UnitScale = WorldTextRenderer.Units * scale;
+			int verticesCount = text.Length * 4;
             TextureVertex[] vertices = new TextureVertex[verticesCount];
-            List<int[]> lines = new List<int[]>();
+			List<BmFontCharInfo> charInfo = new List<BmFontCharInfo>();
+			List<float> lineWidths = new List<float>();
 
-            float x = 0f;
-            int i = 0;
-            foreach(char l in text)
+			// Textbox edge locations
+			float textBoxLeft = 0f;
+			float textBoxRight = textBox.X;
+			float textBoxBottom = -textBox.Y * 0.5f;
+			float textBoxTop = textBox.Y * 0.5f;
+
+			// Keep track of offset positions
+			int vIdx = 0; // Vertex index
+			float x = textBoxLeft;
+			float y = textBoxTop;
+			float lineHeight = WorldTextRenderer.FontFile.Info.Size * UnitScale;
+			float lineWidth = 0f;
+			int lineNumber = 1;
+			int wordNumber = 1;
+
+			// First we build everything, afterward we reposition vertices according to the BmFontCharinfo and alignment
+			// Should be slightly more efficient as to realign all previous characters on the line as soon as we add a new one
+			foreach (char c in text)
             {
+				BmFontChar fontChar = WorldTextRenderer.CharacterMap.GetOrDefault(c);
+				float xOffset = fontChar.XOffset * UnitScale;
+				float yOffset = fontChar.YOffset * UnitScale;
+				float xAdvance = fontChar.XAdvance * UnitScale;
+				float width = fontChar.Width * UnitScale;
+				float height = fontChar.Height * UnitScale;
 
-            }
+				// Outside of bottom boundary; just stop
+				if(y - yOffset - height < textBoxBottom)
+				{
+					break;
+				}
 
+				// Newline supplied or needed
+				if(c == '\r' || c == '\n' || (lineWidth + width >= textBox.X))
+				{
+					x = textBoxLeft;
+					y -= lineHeight;
+
+					// If we exceed the textbox and are not on the first word
+					// we move the last word down a line
+					if((lineWidth + width >= textBox.X) && wordNumber != 1)
+					{
+						float previousLineWidth = lineWidth;
+						lineWidth = 0f;
+
+						for (int i = 0; i < charInfo.Count; i++)
+						{
+							if(charInfo[i].LineNumber == lineNumber && charInfo[i].WordNumber == wordNumber)
+							{
+								charInfo[i].LineNumber++;
+								charInfo[i].WordNumber = 1;
+
+								vertices[charInfo[i].FirstVertexIndex].Position.X = x + charInfo[i].XOffset;
+								vertices[charInfo[i].FirstVertexIndex].Position.Y = y - charInfo[i].Height;
+								vertices[charInfo[i].FirstVertexIndex + 1].Position.X = x + charInfo[i].XOffset;
+								vertices[charInfo[i].FirstVertexIndex + 1].Position.Y = y;
+								vertices[charInfo[i].FirstVertexIndex + 2].Position.X = x + charInfo[i].XOffset + charInfo[i].Width;
+								vertices[charInfo[i].FirstVertexIndex + 2].Position.Y = y;
+								vertices[charInfo[i].FirstVertexIndex + 3].Position.X = x + charInfo[i].XOffset + charInfo[i].Width;
+								vertices[charInfo[i].FirstVertexIndex + 3].Position.Y = y - charInfo[i].Height;
+
+								x += charInfo[i].XAdvance;
+								lineWidth += charInfo[i].Width;
+							}
+						}
+
+						lineWidths.Add(previousLineWidth - lineWidth);
+					}
+					else
+					{
+						lineWidths.Add(lineWidth);
+						lineWidth = 0f;
+					}
+
+					wordNumber = 1;
+					lineNumber++;
+				}
+
+				// Ignore newlines / tab
+				if(c == '\r' || c == '\n' || c == '\t')
+				{
+					continue;
+				}
+
+				Vector4F UVPos = this.CharPositionToUV(fontChar.GetVector4I());
+
+				vertices[vIdx].Color = color;
+				vertices[vIdx + 1].Color = color;
+				vertices[vIdx + 2].Color = color;
+				vertices[vIdx + 3].Color = color;
+
+				vertices[vIdx].Position = new Vector3F(x + xOffset, y - height, 0f);
+				vertices[vIdx + 1].Position = new Vector3F(x + xOffset, y, 0f);
+				vertices[vIdx + 2].Position = new Vector3F(x + xOffset + width, y, 0f);
+				vertices[vIdx + 3].Position = new Vector3F(x + xOffset + width, y - height, 0f);
+
+				vertices[vIdx].Texture = new Vector2F(UVPos.X, UVPos.W);
+				vertices[vIdx + 1].Texture = new Vector2F(UVPos.X, UVPos.Y);
+				vertices[vIdx + 2].Texture = new Vector2F(UVPos.Z, UVPos.Y);
+				vertices[vIdx + 3].Texture = new Vector2F(UVPos.Z, UVPos.W);
+
+				if(c == ' ')
+				{
+					wordNumber++;
+				}
+
+				charInfo.Add(new BmFontCharInfo(c, vIdx, xOffset, yOffset, width, height, xAdvance, lineNumber, wordNumber));
+
+				if (c == ' ')
+				{
+					wordNumber++;
+				}
+
+				x += xAdvance;
+				lineWidth += width;
+				vIdx += 4;
+			}
+
+			// Add last line, this never creates a new line so we need to manually add it
+			lineWidths.Add(lineWidth);
+
+			for (int line = 0; line < lineWidths.Count; line++)
+			{
+				lineWidth = lineWidths[line];
+				float offsetX = 0;
+
+				if(alignment == BmFontAlign.Center)
+				{
+					offsetX = (textBox.X - lineWidth) / 2;
+				}
+
+				if(alignment == BmFontAlign.Right)
+				{
+					offsetX = textBox.X - lineWidth;
+				}
+
+				for(int j = 0; j < charInfo.Count; j++)
+				{
+					if (charInfo[j].LineNumber == (line + 1))
+					{
+						vertices[charInfo[j].FirstVertexIndex].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex + 1].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex + 2].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex + 3].Position.X += offsetX;
+					}
+				}
+			}
 
             return new TextureVertexDrawable(vertices, verticesCount);
         }
@@ -219,10 +377,10 @@ namespace BulletinBoard.Rendering
 				WorldTextRenderer.CharacterMap.Clear();
 			}
 
-			WorldTextRenderer.FontFile = FontLoader.Load(BulletinBoardManager.Instance.GetModDirectory() + "/Font/plixel.fnt");
+			WorldTextRenderer.FontFile = BmFontLoader.Load(BulletinBoardManager.Instance.GetModDirectory() + "/Font/plixel.fnt");
 			WorldTextRenderer.FontTexture = graphics.GetTexture("mods/BulletinBoard/Font/plixel_0");
 
-			foreach (FontChar fChar in WorldTextRenderer.FontFile.Chars)
+			foreach (BmFontChar fChar in WorldTextRenderer.FontFile.Chars)
 			{
 				char c = (char)fChar.ID;
 				WorldTextRenderer.CharacterMap.Add(c, fChar);

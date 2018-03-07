@@ -8,91 +8,23 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 using Plukit.Base;
 
 namespace BulletinBoard.Rendering
 {
-	public class BmFont
-	{
-		public Texture2D _fontTexture;
-		private FontFile _fontFile;
-		private FontRenderer _fontRenderer;
-
-		public BmFont(FontFile font, Texture2D fontTexture)
-		{
-			this._fontFile = font;
-			this._fontTexture = fontTexture;
-			this._fontRenderer = new FontRenderer(this._fontFile, this._fontTexture);
-		}
-
-		public void drawString(String message, Vector2 pos, SpriteBatch _spriteBatch)
-		{
-			this._fontRenderer.DrawText(_spriteBatch, (int)pos.X, (int)pos.Y, message);
-		}
-	}
-
-
-	public class FontRenderer
-	{
-
-		public static FontFile Load(Stream stream)
-		{
-			XmlSerializer deserializer = new XmlSerializer(typeof(FontFile));
-			FontFile file = (FontFile)deserializer.Deserialize(stream);
-			return file;
-		}
-
-		public FontRenderer(FontFile fontFile, Texture2D fontTexture)
-		{
-			_fontFile = fontFile;
-			_texture = fontTexture;
-			_characterMap = new Dictionary<char, FontChar>();
-
-			foreach (var fontCharacter in _fontFile.Chars)
-			{
-				char c = (char)fontCharacter.ID;
-				_characterMap.Add(c, fontCharacter);
-			}
-		}
-
-		private Dictionary<char, FontChar> _characterMap;
-		private FontFile _fontFile;
-		private Texture2D _texture;
-		public void DrawText(SpriteBatch spriteBatch, int x, int y, string text)
-		{
-			int dx = x;
-			int dy = y;
-			foreach (char c in text)
-			{
-				FontChar fc;
-				if (_characterMap.TryGetValue(c, out fc))
-				{
-					var sourceRectangle = new Rectangle(fc.X, fc.Y, fc.Width, fc.Height);
-					var position = new Vector2(dx + fc.XOffset, dy + fc.YOffset);
-
-					spriteBatch.Draw(_texture, position, sourceRectangle, Color.White);
-					dx += fc.XAdvance;
-				}
-			}
-		}
-	}
-
-
 	[Serializable]
 	[XmlRoot("font")]
-	public class FontFile
+	public class BmFontFile
 	{
 		[XmlElement("info")]
-		public FontInfo Info
+		public BmFontInfo Info
 		{
 			get;
 			set;
 		}
 
 		[XmlElement("common")]
-		public FontCommon Common
+		public BmFontCommon Common
 		{
 			get;
 			set;
@@ -100,7 +32,7 @@ namespace BulletinBoard.Rendering
 
 		[XmlArray("pages")]
 		[XmlArrayItem("page")]
-		public List<FontPage> Pages
+		public List<BmFontPage> Pages
 		{
 			get;
 			set;
@@ -108,7 +40,7 @@ namespace BulletinBoard.Rendering
 
 		[XmlArray("chars")]
 		[XmlArrayItem("char")]
-		public List<FontChar> Chars
+		public List<BmFontChar> Chars
 		{
 			get;
 			set;
@@ -116,7 +48,7 @@ namespace BulletinBoard.Rendering
 
 		[XmlArray("kernings")]
 		[XmlArrayItem("kerning")]
-		public List<FontKerning> Kernings
+		public List<BmFontKerning> Kernings
 		{
 			get;
 			set;
@@ -124,7 +56,7 @@ namespace BulletinBoard.Rendering
 	}
 
 	[Serializable]
-	public class FontInfo
+	public class BmFontInfo
 	{
 		[XmlAttribute("face")]
 		public String Face
@@ -228,7 +160,7 @@ namespace BulletinBoard.Rendering
 	}
 
 	[Serializable]
-	public class FontCommon
+	public class BmFontCommon
 	{
 		[XmlAttribute("lineHeight")]
 		public Int32 LineHeight
@@ -302,7 +234,7 @@ namespace BulletinBoard.Rendering
 	}
 
 	[Serializable]
-	public class FontPage
+	public class BmFontPage
 	{
 		[XmlAttribute("id")]
 		public Int32 ID
@@ -320,7 +252,7 @@ namespace BulletinBoard.Rendering
 	}
 
 	[Serializable]
-	public class FontChar
+	public class BmFontChar
 	{
 		[XmlAttribute("id")]
 		public Int32 ID
@@ -403,7 +335,7 @@ namespace BulletinBoard.Rendering
 	}
 
 	[Serializable]
-	public class FontKerning
+	public class BmFontKerning
 	{
 		[XmlAttribute("first")]
 		public Int32 First
@@ -427,13 +359,13 @@ namespace BulletinBoard.Rendering
 		}
 	}
 
-	public class FontLoader
+	public class BmFontLoader
 	{
-		public static FontFile Load(String filename)
+		public static BmFontFile Load(String filename)
 		{
-			XmlSerializer deserializer = new XmlSerializer(typeof(FontFile));
+			XmlSerializer deserializer = new XmlSerializer(typeof(BmFontFile));
 			TextReader textReader = new StreamReader(filename);
-			FontFile file = (FontFile)deserializer.Deserialize(textReader);
+			BmFontFile file = (BmFontFile)deserializer.Deserialize(textReader);
 			textReader.Close();
 			return file;
 		}

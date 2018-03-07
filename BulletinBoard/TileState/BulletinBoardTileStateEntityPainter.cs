@@ -48,9 +48,12 @@ namespace BulletinBoard.TileState
 						this._initialised = true;
 
 						Color[] colors = new Color[] { Color.AliceBlue, Color.Azure, Color.Bisque, Color.Blue, Color.Coral, Color.DarkGreen, Color.Firebrick, Color.Green, Color.Honeydew, Color.IndianRed, Color.LightSalmon, Color.Maroon, Color.Olive, Color.Orange, Color.Purple };
+						BmFontAlign[] align = new BmFontAlign[] { BmFontAlign.Center, BmFontAlign.Left, BmFontAlign.Right };
+
+						int alignIdx = GameContext.RandomSource.Next(align.Length);
 						int colorIdx = GameContext.RandomSource.Next(colors.Length);
 						float scale = GameContext.RandomSource.NextFloat(0.5f, 2.5f);
-						this.WorldTextRenderer.DrawString("Abcdefghijklmnopqrstuvwxyz.,!? aapje boop bam 123", this._position, this.BoardOffset, scale, this._rotation, colors[colorIdx]);
+						this.WorldTextRenderer.DrawString("test banaan bot ad bots knoert bakker aapje boop bam 123", new Vector2F(0.5f, 1f), align[alignIdx], this.BoardOffset, this._position, scale, this._rotation, colors[colorIdx]);
 					}
 				}
 			}
