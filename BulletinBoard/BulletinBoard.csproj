@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +52,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Sunbeam">
-      <HintPath>..\..\Sunbeam\Sunbeam\bin\Release\Sunbeam.dll</HintPath>
+      <HintPath>..\..\Staxel-Sunbeam\Sunbeam\bin\Release\Sunbeam.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,13 +64,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ExamineSignEntityAction.cs" />
     <Compile Include="BulletinBoardManager.cs" />
+    <Compile Include="Effects\ShowSignInterfaceEffectBuilder.cs" />
+    <Compile Include="Patches\UpdateModalModesPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\BmFont.cs" />
     <Compile Include="Rendering\BmFontAlign.cs" />
     <Compile Include="Rendering\BmFontCharInfo.cs" />
     <Compile Include="Rendering\BmFontDrawCall.cs" />
+    <Compile Include="Rendering\VectorHelper.cs" />
     <Compile Include="Rendering\WorldTextRenderer.cs" />
+    <Compile Include="SignController.cs" />
     <Compile Include="TileState\BulletinBoardTileStateBuilder.cs" />
     <Compile Include="TileState\BulletinBoardTileStateEntityBuilder.cs" />
     <Compile Include="TileState\BulletinBoardTileStateEntityLogic.cs" />
@@ -79,16 +86,32 @@
     <Content Include="BulletinBoard.mod">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="UI\index.html" />
+    <Content Include="UI\main.js" />
+    <Content Include="UI\style.css" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Font\plixel.bmfc" />
     <None Include="Assets\Font\plixel.fnt" />
     <None Include="Assets\Models\BulletinBoard.qb" />
     <None Include="Assets\Models\BulletinBoard.tile" />
+    <None Include="bundleconfig.json" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(ProjectDir)Assets\* $(ProjectDir)$(OutDir) /s /e /Y</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets" Condition="Exists('..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>if exist $(ProjectDir)$(OutDir)\UI rmdir $(ProjectDir)$(OutDir)\UI
+if not exist $(ProjectDir)$(OutDir)\UI mkdir $(ProjectDir)$(OutDir)\UI</PreBuildEvent>
   </PropertyGroup>
 </Project>

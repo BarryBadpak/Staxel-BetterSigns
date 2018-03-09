@@ -1,9 +1,14 @@
-﻿using Plukit.Base;
+﻿using BulletinBoard.Actions;
+using BulletinBoard.Rendering;
+using Microsoft.Xna.Framework;
+using Plukit.Base;
 using Staxel;
 using Staxel.Items;
 using Staxel.Logic;
+using Staxel.Notifications;
 using Staxel.Tiles;
 using Staxel.TileStates;
+using System;
 
 namespace BulletinBoard.TileState
 {
@@ -12,9 +17,13 @@ namespace BulletinBoard.TileState
 		private TileConfiguration _configuration;
 		private bool _isRemoved;
 		private bool _serverMode;
-		private Vector3D _topLeftPosition;
 		private uint _variant;
-		private uint _rotation;
+		private Vector3D _centerPos = Vector3D.Zero;
+		private Vector3D _centerPosOffset = new Vector3D(0, 0.30, -0.2);
+
+		private string _message = "";
+		private Color _color = Color.White;
+		private float _scale = 1f;
 
 		public BulletinBoardTileStateEntityLogic(Entity entity, bool serverMode) : base(entity)
 		{
@@ -23,20 +32,10 @@ namespace BulletinBoard.TileState
 		}
 
 		/// <summary>
-		/// Called whenever the tile entity is created. Setup time!
+		/// Update
 		/// </summary>
-		/// <param name="arguments"></param>
-		/// <param name="entityUniverseFacade"></param>
-		public override void Construct(Blob arguments, EntityUniverseFacade entityUniverseFacade)
-		{
-			this.Location = arguments.FetchBlob("location").GetVector3I();
-			this._configuration = GameContext.TileDatabase.GetTileConfiguration(arguments.GetString("tile"));
-			this._variant = (uint)arguments.GetLong("variant");
-
-			this.Entity.Physics.Construct(arguments.FetchBlob("position").GetVector3D(), arguments.FetchBlob("velocity").GetVector3D());
-			this.Entity.Physics.MakePhysicsless();
-		}
-
+		/// <param name="timestep"></param>
+		/// <param name="universe"></param>
 		public override void Update(Timestep timestep, EntityUniverseFacade universe)
 		{
 			// Following check is taken from Daemons mod
@@ -60,42 +59,34 @@ namespace BulletinBoard.TileState
 				return;
 			}
 
-			//Logger.WriteLine("Rotation for "+ this._variant.ToString() +" -- "+tile.Configuration.Rotation(tile.Variant()).ToString());
-
-			Vector3D coreOffset = default(Vector3D);
-			uint rotation = tile.Configuration.Rotation(tile.Variant());
-			
-			CollisionBox bb = tile.Configuration.FetchBoundingBox(tile.Variant(), out coreOffset);
-			this._topLeftPosition = this.Location.ToVector3D() 
-				+ coreOffset + (bb.Max._0Y0() * 0.8);
-
-			//Vector3D 3offsetZ = new Vector3D(0, 0, 1)
-			//Vector3D 0ffsetX  = new Vector3D(1, 0, 0);
-			//Vector3D 3offsetX = new Vector3D(1, 0, 0);
-			//Vector3D 2offsetZ = new Vector3D(0, 0, 1);
-			Vector3D offset = new Vector3D(rotation == 0 || rotation == 3 ? 1 : rotation == 1 ? 0.5 : 0, 0, rotation == 3 || rotation == 2 ? 1 : rotation == 0 ? 0.5 : 0);
-
-			//Logger.WriteLine(bb.Min.ToString() + " || " + bb.Max.ToString());
-
-			Vector3D size = bb.Min + (bb.Max - bb.Min);
-			this._topLeftPosition += size * offset;
-
-			// Worldposition _topLeftPostion + this.Location
-
-			Vector3F tileOffset = default(Vector3F);
-			if (universe.TileOffset(base.Location, TileAccessFlags.None, out tileOffset))
+			// If the centerPos is not set lets set it
+			if (this._centerPos == Vector3D.Zero)
 			{
-				this._topLeftPosition.Y += (double)tileOffset.Y;
+				uint rotation = tile.Configuration.Rotation(tile.Variant());
+				Vector3D offset = VectorHelper.RotatePosition(rotation, this._centerPosOffset);
+				this._centerPos = tile.Configuration.TileCenter(this.Location, tile.Variant()) + offset;
+
+				Vector3F tileOffset = default(Vector3F);
+				if (universe.TileOffset(base.Location, TileAccessFlags.None, out tileOffset))
+				{
+					this._centerPos.Y += (double)tileOffset.Y;
+				}
 			}
-
-			//Logger.WriteLine(this._topLeftPosition.ToString());
 		}
 
-		public Vector3D GetInitialDrawPosition()
+		/// <summary>
+		/// Returns the centerPos
+		/// </summary>
+		/// <returns></returns>
+		public Vector3D GetCenterPosition()
 		{
-			return this._topLeftPosition;
+			return this._centerPos;
 		}
 
+		/// <summary>
+		/// Returns the variant
+		/// </summary>
+		/// <returns></returns>
 		public uint GetVariation()
 		{
 			return this._variant;
@@ -106,11 +97,16 @@ namespace BulletinBoard.TileState
 		/// </summary>
 		public override void Store()
 		{
-			this._blob.FetchBlob("location").SetVector3I(this.Location);
-			base._blob.FetchBlob("centerPos").SetVector3D(this._topLeftPosition);
-			this._blob.SetString("tile", this._configuration.Code);
+			base._blob.FetchBlob("location").SetVector3I(this.Location);
 			base._blob.SetLong("variant", this._variant);
-			this._blob.SetBool("isRemoved", this._isRemoved);
+			base._blob.SetString("tile", this._configuration.Code);
+
+			base._blob.FetchBlob("centerPos").SetVector3D(this._centerPos);
+			base._blob.SetBool("isRemoved", this._isRemoved);
+
+			base._blob.SetString("message", this._message);
+			base._blob.SetLong("color", this._color.PackedValue);
+			base._blob.SetDouble("scale", this._scale);
 		}
 
 		/// <summary>
@@ -120,11 +116,31 @@ namespace BulletinBoard.TileState
 		{
 			base.Restore();
 
-			this.Location = this._blob.FetchBlob("location").GetVector3I();
-			this._topLeftPosition = base._blob.GetBlob("centerPos").GetVector3D();
+			this.Location = base._blob.FetchBlob("location").GetVector3I();
 			this._variant = (uint)base._blob.GetLong("variant");
-			this._isRemoved = this._blob.GetBool("isRemoved");
-			this._configuration = GameContext.TileDatabase.GetTileConfiguration(this._blob.GetString("tile"));
+			this._configuration = GameContext.TileDatabase.GetTileConfiguration(base._blob.GetString("tile"));
+
+			this._centerPos = base._blob.GetBlob("centerPos").GetVector3D();
+			this._isRemoved = base._blob.GetBool("isRemoved");
+
+			this._message = base._blob.GetString("message");
+			this._color = new Color() { PackedValue = (uint)base._blob.GetLong("color") };
+			this._scale = (float)base._blob.GetDouble("scale");
+		}
+
+		/// <summary>
+		/// Called whenever the tile entity is created. Setup time!
+		/// </summary>
+		/// <param name="arguments"></param>
+		/// <param name="entityUniverseFacade"></param>
+		public override void Construct(Blob arguments, EntityUniverseFacade entityUniverseFacade)
+		{
+			this._configuration = GameContext.TileDatabase.GetTileConfiguration(arguments.GetString("tile"));
+			this.Location = arguments.FetchBlob("location").GetVector3I();
+			this._variant = (uint)arguments.GetLong("variant");
+
+			this.Entity.Physics.Construct(arguments.FetchBlob("position").GetVector3D(), Vector3D.Zero);
+			this.Entity.Physics.MakePhysicsless();
 		}
 
 		/// <summary>
@@ -140,10 +156,13 @@ namespace BulletinBoard.TileState
 			constructData.FetchBlob("location").SetVector3I(this.Location);
 			constructData.SetLong("variant", this._variant);
 			constructData.FetchBlob("position").SetVector3D(this.Entity.Physics.Position);
-			constructData.FetchBlob("velocity").SetVector3D(Vector3D.Zero);
 
 			data.SetBool("isRemoved", this._isRemoved);
-			data.FetchBlob("centerPos").SetVector3D(this._topLeftPosition);
+			data.FetchBlob("centerPos").SetVector3D(this._centerPos);
+
+			data.SetString("message", this._message);
+			data.SetLong("color", this._color.PackedValue);
+			data.SetDouble("scale", this._scale);
 		}
 
 		/// <summary>
@@ -153,17 +172,32 @@ namespace BulletinBoard.TileState
 		/// <param name="facade"></param>
 		public override void RestoreFromPersistedData(Blob data, EntityUniverseFacade facade)
 		{
-			Entity.Construct(data.GetBlob("constructData"), facade);
 			base.RestoreFromPersistedData(data, facade);
+			Entity.Construct(data.GetBlob("constructData"), facade);
 
-			this._topLeftPosition = data.GetBlob("centerPos").GetVector3D();
+			this._centerPos = data.GetBlob("centerPos").GetVector3D();
 			this._isRemoved = data.GetBool("isRemoved");
+
+			this._message = data.GetString("message");
+			this._color = new Color() { PackedValue = (uint)data.GetLong("color") };
+			this._scale = (float)data.GetDouble("scale");
+
 			this.Store();
 		}
 
 		public override void Bind() { }
 		public override void BeingLookedAt(Entity entity) { }
-		public override void Interact(Entity entity, EntityUniverseFacade facade, ControlState main, ControlState alt) { }
+		public override void Interact(Entity entity, EntityUniverseFacade facade, ControlState main, ControlState alt) {
+
+			Notification notif2;
+			if (alt.DownClick)
+			{
+				entity.Logic.ActionFacade.NextAction(ExamineSignEntityAction.KindCode());
+				notif2 = GameContext.NotificationDatabase.CreateNotificationFromCode("staxel.notifications.feeder.Empty", entity.Step, NotificationParams.EmptyParams, false);
+				entity.PlayerEntityLogic.ShowNotification(notif2);
+			}
+		}
+
 		public override void KeepAlive() { }
 		public override void PostUpdate(Timestep timestep, EntityUniverseFacade universe)
 		{
@@ -193,7 +227,7 @@ namespace BulletinBoard.TileState
 
 		public override bool Interactable()
 		{
-			return false;
+			return true;
 		}
 
 		public override bool CanChangeActiveItem()

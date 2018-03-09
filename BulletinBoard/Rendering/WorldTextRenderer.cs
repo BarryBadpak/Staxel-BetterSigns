@@ -52,6 +52,8 @@ namespace BulletinBoard.Rendering
 					Vector3F delta = (drawCall.Location - renderOrigin).ToVector3F();
 					float rotation = ((float)drawCall.Rotation + 2f) * 3.14159274f * 0.5f;
 
+					// this._configuration.GetRotationInRadians(this._variant);
+
 					drawable.Render(graphics, Matrix4F.Identity
 						.Translate(drawCall.Offset.ToVector3F())
 						.Rotate(rotation, Vector3F.UnitY)
