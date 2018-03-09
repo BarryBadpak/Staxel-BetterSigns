@@ -57,38 +57,6 @@ namespace BulletinBoard.Rendering
 						.Rotate(rotation, Vector3F.UnitY)
 						.Translate(delta)
 						.Multiply(matrix));
-					//float spacer = 0f;
-					//int i = 0;
-
-					//foreach (char c in drawCall.Message)
-					//{
-					//	if (WorldTextRenderer.Drawables.TryGetValue(c, out TextureVertexDrawable textureVertexdrawable) && WorldTextRenderer.CharacterMap.TryGetValue(c, out FontChar fontchar))
-					//	{
-					//		Color col = colors.Length > i ? colors[i] : Color.White;
-					//		textureVertexdrawable = this.BuildDrawable(fontchar, col);
-
-					//		Vector3D charOffset = new Vector3D((double)((float)fontchar.XOffset * WorldTextRenderer.Units * 2f), 0.0, 0.0);
-					//		Vector3D spacingOffset = new Vector3D((double)spacer + (float)fontchar.Width * WorldTextRenderer.Units, 0.0, 0.0);
-
-					//		Vector3F delta = (drawCall.Location - renderOrigin).ToVector3F();
-					//		Vector2F flatDelta = new Vector2F(delta.X, delta.Z);
-					//		float numberRotate = flatDelta.ToAngle() + 3.14159274f;
-					//		float rotation = ((float)drawCall.rotation + 2f) * 3.14159274f * 0.5f;
-					//		textureVertexdrawable.Render(graphics, Matrix4F.Identity
-					//			.Translate(WorldTextRenderer.BoardOffset)
-					//			.Translate(spacingOffset.ToVector3F())
-					//			.Translate(charOffset.ToVector3F())
-					//			//.Translate(offset.ToVector3F())
-					//			//.Translate(worldCharOffset)
-					//			//.Translate(worldSpacingOffset)
-					//			.Rotate(rotation, Vector3F.UnitY)
-					//			.Translate(delta)
-					//			.Multiply(matrix));
-
-					//		spacer += (float)fontchar.Width * WorldTextRenderer.Units * 2f;
-					//		i++;
-					//	}
-					//}
 				}
 
 				graphics.SetRasterizerState(CullMode.CullCounterClockwiseFace);
@@ -148,20 +116,15 @@ namespace BulletinBoard.Rendering
 					float width = fontChar.Width * UnitScale;
 					float height = fontChar.Height * UnitScale;
 
-					if(fontChar.ID == 32)
-					{
-						xAdvance *= 2;
-					}
-
 					vertices[i].Color = color;
 					vertices[i + 1].Color = color;
 					vertices[i + 2].Color = color;
 					vertices[i + 3].Color = color;
 
-					vertices[i].Position = new Vector3F(x + xOffset, 0f - height, 0f);
+					vertices[i].Position = new Vector3F(x + xOffset, 0f, 0f);
 					vertices[i + 1].Position = new Vector3F(x + xOffset, height, 0f);
 					vertices[i + 2].Position = new Vector3F(x + xOffset + width, height, 0f);
-					vertices[i + 3].Position = new Vector3F(x + xOffset + width, 0f - height, 0f);
+					vertices[i + 3].Position = new Vector3F(x + xOffset + width, 0f, 0f);
 
 					vertices[i].Texture = new Vector2F(UVPos.X, UVPos.W);
 					vertices[i + 1].Texture = new Vector2F(UVPos.X, UVPos.Y);
@@ -193,11 +156,11 @@ namespace BulletinBoard.Rendering
 			List<BmFontCharInfo> charInfo = new List<BmFontCharInfo>();
 			List<float> lineWidths = new List<float>();
 
-			// Textbox edge locations
-			float textBoxLeft = 0f;
-			float textBoxRight = textBox.X;
-			float textBoxBottom = -textBox.Y * 0.5f;
+			// Textbox edge locations, make its origin the center
+			float textBoxLeft = -textBox.X * 0.5f;
+			float textBoxRight = textBox.X * 0.5f;
 			float textBoxTop = textBox.Y * 0.5f;
+			float textBoxBottom = -textBox.Y * 0.5f;
 
 			// Keep track of offset positions
 			int vIdx = 0; // Vertex index
@@ -219,27 +182,33 @@ namespace BulletinBoard.Rendering
 				float width = fontChar.Width * UnitScale;
 				float height = fontChar.Height * UnitScale;
 
-				// Outside of bottom boundary; just stop
-				if(y - yOffset - height < textBoxBottom)
-				{
-					break;
-				}
-
 				// Newline supplied or needed
-				if(c == '\r' || c == '\n' || (lineWidth + width >= textBox.X))
+				if(c == '\r' || c == '\n' || (lineWidth + xAdvance >= textBox.X))
 				{
 					x = textBoxLeft;
 					y -= lineHeight;
 
+					// Outside of bottom boundary; just stop
+					if (y - yOffset - lineHeight < textBoxBottom)
+					{
+						break;
+					}
+
 					// If we exceed the textbox and are not on the first word
 					// we move the last word down a line
-					if((lineWidth + width >= textBox.X) && wordNumber != 1)
+					if ((lineWidth + xAdvance >= textBox.X) && wordNumber != 1)
 					{
 						float previousLineWidth = lineWidth;
 						lineWidth = 0f;
 
 						for (int i = 0; i < charInfo.Count; i++)
 						{
+							// If the previous line ended with a space remove it's width
+							if(charInfo[i].LineNumber == lineNumber && charInfo[i].WordNumber == (wordNumber - 1) && charInfo[i].Char == ' ')
+							{
+								previousLineWidth -= charInfo[i].XAdvance;
+							}
+
 							if(charInfo[i].LineNumber == lineNumber && charInfo[i].WordNumber == wordNumber)
 							{
 								charInfo[i].LineNumber++;
@@ -255,7 +224,7 @@ namespace BulletinBoard.Rendering
 								vertices[charInfo[i].FirstVertexIndex + 3].Position.Y = y - charInfo[i].Height;
 
 								x += charInfo[i].XAdvance;
-								lineWidth += charInfo[i].Width;
+								lineWidth += charInfo[i].XAdvance;
 							}
 						}
 
@@ -271,8 +240,8 @@ namespace BulletinBoard.Rendering
 					lineNumber++;
 				}
 
-				// Ignore newlines / tab
-				if(c == '\r' || c == '\n' || c == '\t')
+				// Ignore newlines / tab or spaces on a new line
+				if(c == '\r' || c == '\n' || c == '\t' || (lineWidth == 0f && c == ' '))
 				{
 					continue;
 				}
@@ -307,36 +276,51 @@ namespace BulletinBoard.Rendering
 				}
 
 				x += xAdvance;
-				lineWidth += width;
+				lineWidth += xAdvance;
 				vIdx += 4;
+			}
+
+			// Bail out early if we have top left alignment
+			if(!alignment.HasFlag(BmFontAlign.Center) && !alignment.HasFlag(BmFontAlign.Right) 
+				&& !alignment.HasFlag(BmFontAlign.Middle) && !alignment.HasFlag(BmFontAlign.Bottom))
+			{
+				return new TextureVertexDrawable(vertices, verticesCount);
 			}
 
 			// Add last line, this never creates a new line so we need to manually add it
 			lineWidths.Add(lineWidth);
 
+			// Lets justify the text!
+			float offsetX = 0;
+			float offsetY = 0;
+			float textHeight = lineWidths.Count * lineHeight;
+
+			if (alignment.HasFlag(BmFontAlign.Middle))
+				offsetY -= (textBox.Y - textHeight) / 2;
+			if (alignment.HasFlag(BmFontAlign.Bottom))
+				offsetY -= textBox.Y - textHeight;
+
 			for (int line = 0; line < lineWidths.Count; line++)
 			{
 				lineWidth = lineWidths[line];
-				float offsetX = 0;
 
-				if(alignment == BmFontAlign.Center)
-				{
+				if(alignment.HasFlag(BmFontAlign.Center))
 					offsetX = (textBox.X - lineWidth) / 2;
-				}
-
-				if(alignment == BmFontAlign.Right)
-				{
+				if (alignment.HasFlag(BmFontAlign.Right))
 					offsetX = textBox.X - lineWidth;
-				}
 
-				for(int j = 0; j < charInfo.Count; j++)
+				for (int j = 0; j < charInfo.Count; j++)
 				{
 					if (charInfo[j].LineNumber == (line + 1))
 					{
 						vertices[charInfo[j].FirstVertexIndex].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex].Position.Y += offsetY;
 						vertices[charInfo[j].FirstVertexIndex + 1].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex + 1].Position.Y += offsetY;
 						vertices[charInfo[j].FirstVertexIndex + 2].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex + 2].Position.Y += offsetY;
 						vertices[charInfo[j].FirstVertexIndex + 3].Position.X += offsetX;
+						vertices[charInfo[j].FirstVertexIndex + 3].Position.Y += offsetY;
 					}
 				}
 			}
@@ -377,8 +361,8 @@ namespace BulletinBoard.Rendering
 				WorldTextRenderer.CharacterMap.Clear();
 			}
 
-			WorldTextRenderer.FontFile = BmFontLoader.Load(BulletinBoardManager.Instance.GetModDirectory() + "/Font/plixel.fnt");
-			WorldTextRenderer.FontTexture = graphics.GetTexture("mods/BulletinBoard/Font/plixel_0");
+			WorldTextRenderer.FontFile = BmFontLoader.Load(BulletinBoardManager.Instance.GetModDirectory() + "/Font/helvetipixel.fnt");
+			WorldTextRenderer.FontTexture = graphics.GetTexture("mods/BulletinBoard/Font/helvetipixel_0");
 
 			foreach (BmFontChar fChar in WorldTextRenderer.FontFile.Chars)
 			{

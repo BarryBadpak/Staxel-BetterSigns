@@ -64,6 +64,7 @@ namespace BulletinBoard.TileState
 
 			Vector3D coreOffset = default(Vector3D);
 			uint rotation = tile.Configuration.Rotation(tile.Variant());
+			
 			CollisionBox bb = tile.Configuration.FetchBoundingBox(tile.Variant(), out coreOffset);
 			this._topLeftPosition = this.Location.ToVector3D() 
 				+ coreOffset + (bb.Max._0Y0() * 0.8);
