@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{875AA886-FE4E-40FF-B5D9-FC0181A0F8F0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BetterSigns</RootNamespace>
+    <AssemblyName>BetterSigns</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\SoftwareLibraries\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FNA">
+      <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Staxel\bin\FNA.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Plukit.Base">
+      <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Staxel\bin\Plukit.Base.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Staxel">
+      <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Staxel\bin\Staxel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sunbeam">
+      <HintPath>..\..\Sunbeam\Sunbeam\bin\Release\Sunbeam.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BetterSigns.cs" />
+    <Compile Include="Staxel\Commands\ChangeSignCommand.cs" />
+    <Compile Include="Staxel\Effects\ShowSignInterfaceEffectBuilder.cs" />
+    <Compile Include="Patches\InterruptionOverlayControllerNS\ShowNightTransitionPatch.cs" />
+    <Compile Include="Patches\OverlayControllerNS\OnHideAllPatch.cs" />
+    <Compile Include="Patches\OverlayControllerNS\ResetPatch.cs" />
+    <Compile Include="Patches\OverlayControllerNS\HidePatch.cs" />
+    <Compile Include="Patches\OverlayControllerNS\UpdateModalModesPatch.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Staxel\Rendering\BmFont.cs" />
+    <Compile Include="Staxel\Rendering\BmFontAlign.cs" />
+    <Compile Include="Staxel\Rendering\BmFontCharInfo.cs" />
+    <Compile Include="Staxel\Rendering\BmFontDrawCall.cs" />
+    <Compile Include="Staxel\Rendering\VectorHelper.cs" />
+    <Compile Include="Staxel\Rendering\WorldTextRenderer.cs" />
+    <Compile Include="UIController.cs" />
+    <Compile Include="Staxel\TileState\BulletinBoardTileStateBuilder.cs" />
+    <Compile Include="Staxel\TileState\BulletinBoardTileStateEntityBuilder.cs" />
+    <Compile Include="Staxel\TileState\BulletinBoardTileStateEntityLogic.cs" />
+    <Compile Include="Staxel\TileState\BulletinBoardTileStateEntityPainter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Font\plixel_0.png" />
+    <Content Include="BetterSigns.mod">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\index.html" />
+    <Content Include="UI\jscolor.min.js" />
+    <Content Include="UI\main.js" />
+    <Content Include="UI\style.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Font\plixel.bmfc" />
+    <None Include="Assets\Font\plixel.fnt" />
+    <None Include="Assets\Models\BoardBlack.qb" />
+    <None Include="Assets\Models\BoardBlue.qb" />
+    <None Include="Assets\Models\BoardBrown.qb" />
+    <None Include="Assets\Models\BoardDarkBrown.qb" />
+    <None Include="Assets\Models\BoardGrey.qb" />
+    <None Include="Assets\Models\BoardPink.qb" />
+    <None Include="Assets\Models\BoardRed.qb" />
+    <None Include="Assets\Models\BulletinBoard.qb" />
+    <None Include="Assets\Models\BulletinBoard.tile" />
+    <None Include="Assets\Models\SignBlack.qb" />
+    <None Include="Assets\Models\SignBlue.qb" />
+    <None Include="Assets\Models\SignBrown.qb" />
+    <None Include="Assets\Models\SignDarkBrown.qb" />
+    <None Include="Assets\Models\SignGrey.qb" />
+    <None Include="Assets\Models\SignPink.qb" />
+    <None Include="Assets\Models\SignRed.qb" />
+    <None Include="Assets\Models\WallSignBlack.qb" />
+    <None Include="Assets\Models\WallSignBlue.qb" />
+    <None Include="Assets\Models\WallSignBrown.qb" />
+    <None Include="Assets\Models\WallSignDarkBrown.qb" />
+    <None Include="Assets\Models\WallSignGrey.qb" />
+    <None Include="Assets\Models\WallSignPink.qb" />
+    <None Include="Assets\Models\WallSignRed.qb" />
+    <None Include="bundleconfig.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(ProjectDir)Assets\* $(ProjectDir)$(OutDir) /s /e /Y</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets" Condition="Exists('..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>if exist $(ProjectDir)$(OutDir)\UI rmdir $(ProjectDir)$(OutDir)\UI
+if not exist $(ProjectDir)$(OutDir)\UI mkdir $(ProjectDir)$(OutDir)\UI</PreBuildEvent>
+  </PropertyGroup>
+</Project>
