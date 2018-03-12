@@ -9,7 +9,7 @@ namespace BetterSigns
 {
     public class BetterSigns: SunbeamMod
     {
-		public override string ModIdentifier => "BulletinBoard";
+		public override string ModIdentifier => "BetterSigns";
 		public static BetterSigns Instance { get; private set; }
 
 		public UIController SignController;

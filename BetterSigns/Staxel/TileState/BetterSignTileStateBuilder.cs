@@ -5,7 +5,7 @@ using Staxel.TileStates;
 
 namespace BetterSigns.Staxel.TileState
 {
-	class BulletinBoardTileStateBuilder : ITileStateBuilder
+	class BetterSignTileStateBuilder : ITileStateBuilder
 	{
 		public void Load() { }
 		public void Dispose() {}
@@ -16,7 +16,7 @@ namespace BetterSigns.Staxel.TileState
 		/// <returns></returns>
 		public string Kind()
 		{
-			return "mods.bulletinboard.tileState.BulletinBoard";
+			return "mods.betterSigns.tileState.sign";
 		}
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace BetterSigns.Staxel.TileState
 		/// <returns></returns>
 		public Entity Instance(Vector3I location, Tile tile, Universe universe)
 		{
-			return BulletinBoardTileStateEntityBuilder.Spawn(universe, tile, location);
+			return BetterSignTileStateEntityBuilder.Spawn(universe, tile, location);
 		}
 	}
 }

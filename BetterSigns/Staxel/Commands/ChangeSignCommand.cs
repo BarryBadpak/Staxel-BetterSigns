@@ -25,7 +25,7 @@ namespace BetterSigns.Staxel.Commands
 			Entity ent = default(Entity);
 			if (facade.TryGetEntity(id, out ent) && ent.TileStateEntityLogic != null)
 			{
-				BulletinBoardTileStateEntityLogic entLogic = ent.TileStateEntityLogic as BulletinBoardTileStateEntityLogic;
+				BetterSignTileStateEntityLogic entLogic = ent.TileStateEntityLogic as BetterSignTileStateEntityLogic;
 				entLogic.ChangeSign(message, color, scale, align);
 			}
 		}

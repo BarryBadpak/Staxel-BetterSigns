@@ -1,4 +1,5 @@
-﻿using BetterSigns.Staxel.Effects;
+﻿using BetterSigns.Staxel.Components;
+using BetterSigns.Staxel.Effects;
 using BetterSigns.Staxel.Rendering;
 using Microsoft.Xna.Framework;
 using Plukit.Base;
@@ -10,14 +11,14 @@ using Staxel.TileStates;
 
 namespace BetterSigns.Staxel.TileState
 {
-	public class BulletinBoardTileStateEntityLogic : TileStateEntityLogic
+	public class BetterSignTileStateEntityLogic : TileStateEntityLogic
 	{
+		private SignComponent _signComponent;
 		private TileConfiguration _configuration;
 		private bool _isRemoved;
 		private bool _serverMode;
 		private uint _variant;
 		private Vector3D _centerPos = Vector3D.Zero;
-		private Vector3D _centerPosOffset = new Vector3D(0, 0.30, -0.2);
 
 		private string _message = "";
 		private Color _color = Color.White;
@@ -25,7 +26,7 @@ namespace BetterSigns.Staxel.TileState
 		private BmFontAlign _align;
 		private bool _needsStore = true;
 
-		public BulletinBoardTileStateEntityLogic(Entity entity, bool serverMode) : base(entity)
+		public BetterSignTileStateEntityLogic(Entity entity, bool serverMode) : base(entity)
 		{
 			this._serverMode = serverMode;
 			this.Entity.Physics.PriorityChunkRadius(0, false);
@@ -47,7 +48,7 @@ namespace BetterSigns.Staxel.TileState
 
 			// Following check is taken from Daemons mod
 			// If the tile/variant has changed, or it doesn't have a Sprinkler Component set this logic to be removed.
-			if ((tile.Configuration != this._configuration) || this._variant != tile.Variant())
+			if ((tile.Configuration != this._configuration) || this._variant != tile.Variant() || this._signComponent == null)
 			{
 				this._isRemoved = true;
 
@@ -63,13 +64,13 @@ namespace BetterSigns.Staxel.TileState
 			if (this._centerPos == Vector3D.Zero)
 			{
 				uint rotation = tile.Configuration.Rotation(tile.Variant());
-				Vector3D offset = VectorHelper.RotatePosition(rotation, this._centerPosOffset);
+				Vector3D offset = VectorHelper.RotatePosition(rotation, this._signComponent.offsetFromCenter);
 				this._centerPos = tile.Configuration.TileCenter(this.Location, tile.Variant()) + offset;
 
 				Vector3F tileOffset = default(Vector3F);
 				if (universe.TileOffset(base.Location, TileAccessFlags.None, out tileOffset))
 				{
-					this._centerPos.Y += (double)tileOffset.Y;
+					this._centerPos += tileOffset.ToVector3D();
 				}
 			}
 		}
@@ -122,6 +123,15 @@ namespace BetterSigns.Staxel.TileState
 		public uint GetVariation()
 		{
 			return this._variant;
+		}
+
+		/// <summary>
+		/// Returns the size of the region where the text is drawn in, as defined in the config
+		/// </summary>
+		/// <returns></returns>
+		public Vector2F GetTextRegionSize()
+		{
+			return this._signComponent.textRegionSize;
 		}
 
 		/// <summary>
@@ -181,6 +191,8 @@ namespace BetterSigns.Staxel.TileState
 			this._color = new Color() { PackedValue = (uint)base._blob.GetLong("color") };
 			this._scale = (float)base._blob.GetDouble("scale");
 			this._align = (BmFontAlign)base._blob.GetLong("align");
+
+			this._signComponent = _configuration.Components.GetOrDefault<SignComponent>();
 		}
 
 		/// <summary>
@@ -191,6 +203,7 @@ namespace BetterSigns.Staxel.TileState
 		public override void Construct(Blob arguments, EntityUniverseFacade entityUniverseFacade)
 		{
 			this._configuration = GameContext.TileDatabase.GetTileConfiguration(arguments.GetString("tile"));
+			this._signComponent = _configuration.Components.GetOrDefault<SignComponent>();
 			this.Location = arguments.FetchBlob("location").GetVector3I();
 			this._variant = (uint)arguments.GetLong("variant");
 

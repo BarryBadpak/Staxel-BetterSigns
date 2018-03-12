@@ -1,0 +1,41 @@
+﻿{
+	"__inherits": "staxel/tileObject/base.config",
+	"code": "mods.betterSigns.tiles.signBlack",
+	"tileStateKind": "mods.betterSigns.tileState.sign",
+	"voxels": "mods/BetterSigns/Models/SignBlack.qb",
+	"categories": [
+		"misc",
+		"sign",
+		"post",
+		"board",
+		"message",
+		"black"
+	],
+	"compound": {
+		"size": {
+			"x": 2,
+			"y": 2,
+			"z": 1
+		}
+	},
+	"pricing": {
+		"buyable": true,
+		"sellPrice": 25,
+		"value": 50
+	},
+	"randomizePosition": false,
+	"searchable": true,
+	"stepSoundGroup": "staxel.sounds.WoodFootSteps",
+	"prefetchTileState": true,
+	"betterSign": {
+		"offsetFromCenter": {
+			"x": 0,
+			"y": 0.475,
+			"z": 0.095
+		},
+		"textRegionSize": {
+			"x": 1.7,
+			"y": 0.95
+		}
+	}
+}

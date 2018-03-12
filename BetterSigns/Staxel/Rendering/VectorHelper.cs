@@ -21,5 +21,10 @@ namespace BetterSigns.Staxel.Rendering
                     throw new Exception();
             }
         }
-    }
+
+		public static float GetRotationInRadians(uint rotation)
+		{
+			return (float)(1.5707963267948966 * (double)rotation);
+		}
+	}
 }

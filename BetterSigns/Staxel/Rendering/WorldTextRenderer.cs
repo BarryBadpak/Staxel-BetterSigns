@@ -43,7 +43,7 @@ namespace BetterSigns.Staxel.Rendering
 				{
 					TextureVertexDrawable drawable = drawCall.Drawable;
 					Vector3F delta = (drawCall.Location - renderOrigin).ToVector3F();
-					float rotation = ((float)drawCall.Rotation + 2f) * 3.14159274f * 0.5f;
+					float rotation = VectorHelper.GetRotationInRadians(drawCall.Rotation);
 
 					// this._configuration.GetRotationInRadians(this._variant);
 
@@ -375,7 +375,7 @@ namespace BetterSigns.Staxel.Rendering
 			}
 
 			WorldTextRenderer.FontFile = BmFontLoader.Load(BetterSigns.Instance.GetModDirectory() + "/Font/helvetipixel.fnt");
-			WorldTextRenderer.FontTexture = graphics.GetTexture("mods/BulletinBoard/Font/helvetipixel_0");
+			WorldTextRenderer.FontTexture = graphics.GetTexture("mods/BetterSigns/Font/helvetipixel_0");
 
 			foreach (BmFontChar fChar in WorldTextRenderer.FontFile.Chars)
 			{

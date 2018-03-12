@@ -9,13 +9,9 @@ using Staxel.Rendering;
 
 namespace BetterSigns.Staxel.TileState
 {
-	class BulletinBoardTileStateEntityPainter : EntityPainter
+	class BetterSignTileStateEntityPainter : EntityPainter
 	{
-		private Vector3D BoardOffset = new Vector3D(0.25, 0, -0.03);
-		private Vector3D BoardRegion = new Vector3D(2.6, 1.3, 0);
-
 		private WorldTextRenderer WorldTextRenderer = new WorldTextRenderer();
-		private BillboardNumberRenderer BillboardRenderer = new BillboardNumberRenderer();
 		private bool _textInitialized = false;
 
 		private Vector3D _position;
@@ -42,7 +38,7 @@ namespace BetterSigns.Staxel.TileState
 			{
 				//GameContext.DebugGraphics.Enabled = true;
 
-				BulletinBoardTileStateEntityLogic logic = entity.TileStateEntityLogic as BulletinBoardTileStateEntityLogic;
+				BetterSignTileStateEntityLogic logic = entity.TileStateEntityLogic as BetterSignTileStateEntityLogic;
 				if (logic != null)
 				{
 					this._position = logic.GetCenterPosition();
@@ -56,7 +52,7 @@ namespace BetterSigns.Staxel.TileState
 
 						this.WorldTextRenderer.DrawString(
 							this._message,
-							new Vector2F((float)this.BoardRegion.X, (float)this.BoardRegion.Y),
+							logic.GetTextRegionSize(),
 							this._align,
 							Vector3D.Zero,
 							this._position,
@@ -79,11 +75,12 @@ namespace BetterSigns.Staxel.TileState
 
 				if (GameContext.DebugGraphics.Enabled)
 				{
-					BulletinBoardTileStateEntityLogic logic = entity.TileStateEntityLogic as BulletinBoardTileStateEntityLogic;
+					BetterSignTileStateEntityLogic logic = entity.TileStateEntityLogic as BetterSignTileStateEntityLogic;
 					if (logic != null)
 					{
-						Vector3D rotatedRadius = VectorHelper.RotatePosition(this._rotation, BoardRegion * 0.5);
-						GameContext.DebugGraphics.DrawBoxCentered(this._position, rotatedRadius, Color.Yellow, -1);
+						Vector2F size = logic.GetTextRegionSize();
+						Vector3D rotatedRadius = VectorHelper.RotatePosition(this._rotation, new Vector3D(size.X, size.Y, 0) * 0.5);
+						GameContext.DebugGraphics.DrawBoxCentered(this._position, rotatedRadius, Color.Yellow, 1);
 					}
 				}
 			}
@@ -93,7 +90,7 @@ namespace BetterSigns.Staxel.TileState
 		public override void ClientPostUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade) { }
 		public override void ClientUpdate(Timestep timestep, Entity entity, AvatarController avatarController, EntityUniverseFacade facade)
 		{
-			BulletinBoardTileStateEntityLogic logic = entity.TileStateEntityLogic as BulletinBoardTileStateEntityLogic;
+			BetterSignTileStateEntityLogic logic = entity.TileStateEntityLogic as BetterSignTileStateEntityLogic;
 			if (logic != null)
 			{
 				string message = logic.GetMessage();

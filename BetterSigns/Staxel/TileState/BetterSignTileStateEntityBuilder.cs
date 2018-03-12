@@ -4,10 +4,10 @@ using Staxel.Tiles;
 
 namespace BetterSigns.Staxel.TileState
 {
-	class BulletinBoardTileStateEntityBuilder : IEntityPainterBuilder, IEntityLogicBuilder2
+	class BetterSignTileStateEntityBuilder : IEntityPainterBuilder, IEntityLogicBuilder2
 	{
 		public string Kind { get { return KindCode; } }
-		public static string KindCode { get { return "mods.bulletinboard.tileStateEntity.BulletinBoard"; } }
+		public static string KindCode { get { return "mods.betterSign.tileStateEntity.sign"; } }
 
 		public void Load() { }
 
@@ -17,7 +17,7 @@ namespace BetterSigns.Staxel.TileState
 		/// <returns></returns>
 		EntityPainter IEntityPainterBuilder.Instance()
 		{
-			return new BulletinBoardTileStateEntityPainter();
+			return new BetterSignTileStateEntityPainter();
 		}
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace BetterSigns.Staxel.TileState
 		/// <returns></returns>
 		EntityLogic IEntityLogicBuilder.Instance(Entity entity, bool server)
 		{
-			return new BulletinBoardTileStateEntityLogic(entity, server);
+			return new BetterSignTileStateEntityLogic(entity, server);
 		}
 
 		/// <summary>

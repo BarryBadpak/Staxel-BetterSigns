@@ -1,0 +1,41 @@
+﻿{
+	"__inherits": "staxel/tileObject/base.config",
+	"code": "mods.betterSigns.tiles.boardBlue",
+	"tileStateKind": "mods.betterSigns.tileState.sign",
+	"voxels": "mods/BetterSigns/Models/BoardBlue.qb",
+	"categories": [
+		"misc",
+		"sign",
+		"post",
+		"board",
+		"message",
+		"blue"
+	],
+	"compound": {
+		"size": {
+			"x": 3,
+			"y": 3,
+			"z": 1
+		}
+	},
+	"pricing": {
+		"buyable": true,
+		"sellPrice": 40,
+		"value": 70
+	},
+	"randomizePosition": false,
+	"searchable": true,
+	"stepSoundGroup": "staxel.sounds.WoodFootSteps",
+	"prefetchTileState": true,
+	"betterSign": {
+		"offsetFromCenter": {
+			"x": 0,
+			"y": 0.3,
+			"z": 0.2
+		},
+		"textRegionSize": {
+			"x": 2.6,
+			"y": 1.3
+		}
+	}
+}

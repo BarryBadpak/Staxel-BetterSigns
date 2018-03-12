@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="BetterSigns.cs" />
     <Compile Include="Staxel\Commands\ChangeSignCommand.cs" />
+    <Compile Include="Staxel\Components\SignComponent.cs" />
+    <Compile Include="Staxel\Components\SignComponentBuilder.cs" />
     <Compile Include="Staxel\Effects\ShowSignInterfaceEffectBuilder.cs" />
     <Compile Include="Patches\InterruptionOverlayControllerNS\ShowNightTransitionPatch.cs" />
     <Compile Include="Patches\OverlayControllerNS\OnHideAllPatch.cs" />
@@ -80,10 +82,10 @@
     <Compile Include="Staxel\Rendering\VectorHelper.cs" />
     <Compile Include="Staxel\Rendering\WorldTextRenderer.cs" />
     <Compile Include="UIController.cs" />
-    <Compile Include="Staxel\TileState\BulletinBoardTileStateBuilder.cs" />
-    <Compile Include="Staxel\TileState\BulletinBoardTileStateEntityBuilder.cs" />
-    <Compile Include="Staxel\TileState\BulletinBoardTileStateEntityLogic.cs" />
-    <Compile Include="Staxel\TileState\BulletinBoardTileStateEntityPainter.cs" />
+    <Compile Include="Staxel\TileState\BetterSignTileStateBuilder.cs" />
+    <Compile Include="Staxel\TileState\BetterSignTileStateEntityBuilder.cs" />
+    <Compile Include="Staxel\TileState\BetterSignTileStateEntityLogic.cs" />
+    <Compile Include="Staxel\TileState\BetterSignTileStateEntityPainter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Font\plixel_0.png" />
@@ -98,6 +100,26 @@
   <ItemGroup>
     <None Include="Assets\Font\plixel.bmfc" />
     <None Include="Assets\Font\plixel.fnt" />
+    <None Include="Assets\Models\WallSignRed.tile" />
+    <None Include="Assets\Models\WallSignPink.tile" />
+    <None Include="Assets\Models\WallSignGrey.tile" />
+    <None Include="Assets\Models\WallSignDarkBrown.tile" />
+    <None Include="Assets\Models\WallSignBrown.tile" />
+    <None Include="Assets\Models\WallSignblue.tile" />
+    <None Include="Assets\Models\WallSignBlack.tile" />
+    <None Include="Assets\Models\SignRed.tile" />
+    <None Include="Assets\Models\SignPink.tile" />
+    <None Include="Assets\Models\SignGrey.tile" />
+    <None Include="Assets\Models\SignDarkBrown.tile" />
+    <None Include="Assets\Models\SignBrown.tile" />
+    <None Include="Assets\Models\SignBlue.tile" />
+    <None Include="Assets\Models\SignBlack.tile" />
+    <None Include="Assets\Models\BoardRed.tile" />
+    <None Include="Assets\Models\BoardPink.tile" />
+    <None Include="Assets\Models\BoardGrey.tile" />
+    <None Include="Assets\Models\BoardDarkBrown.tile" />
+    <None Include="Assets\Models\BoardBrown.tile" />
+    <None Include="Assets\Models\BoardBlue.tile" />
     <None Include="Assets\Models\BoardBlack.qb" />
     <None Include="Assets\Models\BoardBlue.qb" />
     <None Include="Assets\Models\BoardBrown.qb" />
@@ -105,8 +127,7 @@
     <None Include="Assets\Models\BoardGrey.qb" />
     <None Include="Assets\Models\BoardPink.qb" />
     <None Include="Assets\Models\BoardRed.qb" />
-    <None Include="Assets\Models\BulletinBoard.qb" />
-    <None Include="Assets\Models\BulletinBoard.tile" />
+    <None Include="Assets\Models\BoardBlack.tile" />
     <None Include="Assets\Models\SignBlack.qb" />
     <None Include="Assets\Models\SignBlue.qb" />
     <None Include="Assets\Models\SignBrown.qb" />
