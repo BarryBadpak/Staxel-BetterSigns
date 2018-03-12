@@ -1,0 +1,40 @@
+﻿{
+	"__inherits": "staxel/tileObject/museum/paintings/paintingBase.config",
+	"code": "mods.betterSigns.tiles.wallSignGrey",
+	"tileStateKind": "mods.betterSigns.tileState.sign",
+	"voxels": "mods/BetterSigns/Models/WallSignGrey.qb",
+	"prefetchTileState": true,
+	"categories": [
+		"misc",
+		"sign",
+		"post",
+		"board",
+		"message",
+		"grey",
+		"gray"
+	],
+	"compound": {
+		"size": {
+			"x": 2,
+			"y": 1,
+			"z": 1
+		}
+	},
+	"searchable": true,
+	"pricing": {
+		"buyable": true,
+		"sellPrice": 35,
+		"value": 60
+	},
+	"betterSign": {
+		"offsetFromCenter": {
+			"x": 0,
+			"y": 0,
+			"z": 0.001
+		},
+		"textRegionSize": {
+			"x": 1.70,
+			"y": 0.80
+		}
+	}
+}

@@ -1,0 +1,82 @@
+﻿<svg style="position: absolute; width: 0; height: 0; overflow: hidden" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<symbol id="icon-vertical_align_top" viewBox="0 0 24 24">
+			<title>vertical_align_top</title>
+			<path d="M3.984 3h16.031v2.016h-16.031v-2.016zM8.016 11.016l3.984-4.031 3.984 4.031h-3v9.984h-1.969v-9.984h-3z"></path>
+		</symbol>
+		<symbol id="icon-vertical_align_center" viewBox="0 0 24 24">
+			<title>vertical_align_center</title>
+			<path d="M3.984 11.016h16.031v1.969h-16.031v-1.969zM15.984 5.016l-3.984 3.984-3.984-3.984h3v-4.031h1.969v4.031h3zM8.016 18.984l3.984-3.984 3.984 3.984h-3v4.031h-1.969v-4.031h-3z"></path>
+		</symbol>
+		<symbol id="icon-vertical_align_bottom" viewBox="0 0 24 24">
+			<title>vertical_align_bottom</title>
+			<path d="M3.984 18.984h16.031v2.016h-16.031v-2.016zM15.984 12.984l-3.984 4.031-3.984-4.031h3v-9.984h1.969v9.984h3z"></path>
+		</symbol>
+		<symbol id="icon-format_align_left" viewBox="0 0 24 24">
+			<title>format_align_left</title>
+			<path d="M3 3h18v2.016h-18v-2.016zM3 21v-2.016h18v2.016h-18zM3 12.984v-1.969h18v1.969h-18zM15 6.984v2.016h-12v-2.016h12zM15 15v2.016h-12v-2.016h12z"></path>
+		</symbol>
+		<symbol id="icon-format_align_center" viewBox="0 0 24 24">
+			<title>format_align_center</title>
+			<path d="M3 3h18v2.016h-18v-2.016zM6.984 6.984h10.031v2.016h-10.031v-2.016zM3 12.984v-1.969h18v1.969h-18zM3 21v-2.016h18v2.016h-18zM6.984 15h10.031v2.016h-10.031v-2.016z"></path>
+		</symbol>
+		<symbol id="icon-format_align_right" viewBox="0 0 24 24">
+			<title>format_align_right</title>
+			<path d="M3 3h18v2.016h-18v-2.016zM9 9v-2.016h12v2.016h-12zM3 12.984v-1.969h18v1.969h-18zM9 17.016v-2.016h12v2.016h-12zM3 21v-2.016h18v2.016h-18z"></path>
+		</symbol>
+	</defs>
+</svg>
+
+<div id="SignInfo_Container" style="display:none;">
+	<div id="SignInfo">
+		<div id="SignInfo_Close" class="close-button"></div>
+		<div id="SignInfo_Details">
+			<label for="SignInfo_Message">Edit sign message</label>
+			<textarea id="SignInfo_Message"></textarea>
+
+			<div id="SignInfo_Row">
+				<div id="SignInfo_LeftColumn">
+					<div id="SignInfo_SizeContainer">
+						<label>Size</label>
+						<div class="SignInfo-option">
+							<div class="option-name">
+								<span class="data">1</span>
+							</div>
+							<div class='option-slider slider-signscale ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all'>
+								<div class='ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min'
+									 style='width: 0%;'></div>
+								<span class='ui-slider-handle ui-state-default ui-corner-all' tabindex='0'
+									  style='left: 0%;'></span>
+							</div>
+						</div>
+					</div>
+
+					<div style="clear:both;"></div>
+
+					<div id="SignInfo_AlignmentContainer">
+						<label>Align</label>
+						<div id="SignInfo_AlignmentOptions">
+							<svg class="icon icon-format_align_left active" data-group="0" data-value="1"><use xlink:href="#icon-format_align_left"></use></svg>
+							<svg class="icon icon-format_align_center" data-group="0" data-value="2"><use xlink:href="#icon-format_align_center"></use></svg>
+							<svg class="icon icon-format_align_right" data-group="0" data-value="4"><use xlink:href="#icon-format_align_right"></use></svg>
+
+							<span id="SignInfo_Spacer">|</span>
+
+							<svg class="icon icon-vertical_align_top active" data-group="1" data-value="8"><use xlink:href="#icon-vertical_align_top"></use></svg>
+							<svg class="icon icon-vertical_align_center" data-group="1" data-value="16"><use xlink:href="#icon-vertical_align_center"></use></svg>
+							<svg class="icon icon-vertical_align_bottom" data-group="1" data-value="32"><use xlink:href="#icon-vertical_align_bottom"></use></svg>
+						</div>
+					</div>
+				</div>
+				<div id="SignInfo_ColorContainer">
+					<label>Color</label>
+					<div id="SignInfo_ColorWrapper">
+						<div id="SignInfo_ColorOverlay"></div>
+						<input id='SignInfo_ColorPicker' value="rgb(255,255,255)" readonly />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="SignInfo_Save">Done</div>
+	</div>
+</div>

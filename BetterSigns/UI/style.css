@@ -1,0 +1,226 @@
+﻿#SignInfo_Container {
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0%;
+    left:0%;
+    overflow:hidden;
+    z-index:0;
+}
+
+#SignInfo_Container #SignInfo {
+    width: 365px;
+    height: 287px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transition: transform 1s linear;
+    -webkit-transition: -webkit-transform 1s ease;
+    background-image: url(../image/PlayerList/PlayerListUI.png);
+    background-size: contain;
+    z-index: 0;
+}
+
+#SignInfo #SignInfo_Close {
+    position: absolute;
+    width: 31px;
+    height: 30px;
+    border-radius: 5px;
+    background-position: 0px 0px;
+    background-image: url(../image/CloseButton.png);
+    top: -35px;
+    right: 10px;
+}
+
+#SignInfo #SignInfo_Details {
+	position: absolute;
+	top: 17px;
+	left: 20px;
+	width: 325px;
+	height: 237px;
+}
+
+#SignInfo_Details label {
+	color: #ffd44f;
+	font-size: 18px;
+	display: block;
+}
+
+#SignInfo_Details > label {
+	text-align: center;
+	font-size: 26px;
+}
+
+#SignInfo_Details #SignInfo_Message {
+	width: 100%;
+	height: 100px;
+	border: 2px solid #ffaa39;
+	background: #f1e2b9;
+	margin: 0px;
+	resize: none;
+	box-shadow: inset 0 10px 0 0 #f1db99;
+	font-size: 18px;
+	line-height: 20px;
+	padding: 5px;
+}
+
+#SignInfo_Details #SignInfo_Row {
+	width: 100%;
+	height: 95px;
+	position: relative;
+	left: 5px;
+}
+
+#SignInfo_Details #SignInfo_Row:after {
+	display: block;
+	content: "";
+	clear: both;
+}
+
+#SignInfo_Row #SignInfo_LeftColumn, #SignInfo_Row #SignInfo_ColorContainer {
+	display: inline-block;
+	float: left;
+	position: relative;
+	text-align: center;
+	display: block;
+}
+
+#SignInfo_Row #SignInfo_LeftColumn {
+	width: 74%;
+	text-align: left;
+	margin-top: 10px;
+}
+
+#SignInfo_Row #SignInfo_ColorContainer {
+	width: 26%;
+}
+
+#SignInfo_ColorWrapper {
+	position: absolute;
+	left: 18px;
+}
+
+#SignInfo_SizeContainer {
+	width:100%;
+	height: 37px;
+}
+
+#SignInfo_AlignmentContainer {
+	width:100%;
+}
+
+#SignInfo_SizeContainer:after {
+	display: block;
+	content: "";
+	clear: both;
+}
+
+#SignInfo_SizeContainer label, #SignInfo_AlignmentContainer label {
+	float: left;
+	text-align: left;
+}
+
+#SignInfo_AlignmentContainer label {
+	width: 20%;
+}
+
+#SignInfo_AlignmentOptions  {
+	float:left;
+	width:79%;
+}
+
+#SignInfo_Spacer {
+	float: left;
+	color: #ffdd55;
+	margin-right: 4px;
+	margin-left: 2px;
+}
+
+#SignInfo_AlignmentContainer .icon {
+	width: 30px;
+	height: 30px;
+	padding: 2px;
+	fill: currentColor;
+	color: #ffa239;
+	float: left;
+	position: relative;
+	top: 3px;
+}
+
+#SignInfo_AlignmentContainer .icon.active {
+	color: #ff7438;
+	border: 2px solid #ffa239;
+	background: #f1e2b9;
+}
+
+#SignInfo_ColorPicker {
+	width: 50px;
+	height: 50px;
+	border: 0;
+	text-indent: -999px;
+}
+
+#SignInfo_ColorOverlay {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	background-size: contain;
+	pointer-events: none;
+	border: 3px solid #ffa239;
+}
+
+#SignInfo_Details .option-name {
+	float: right;
+	height: 100%;
+	color: #f7f174;
+	text-align: center;
+	font-size:18px;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0;
+	width: 20%;
+}
+
+#SignInfo_Details .option-slider {
+	float: none;
+	width: 53%;
+	margin-left: 23.5%;
+	position: relative;
+	top: 4px;
+}
+
+#SignInfo_Save {
+	width: 100px;
+	height: 30px;
+	border-radius: 5px;
+	border-bottom: #ff7438 solid 3px;
+	background-color: #ffa239;
+	color: #ffff63;
+	display: inline-block;
+	text-align: center;
+	line-height: 25px;
+	font-size: 22px;
+	transition: transform 1s linear;
+	-webkit-transition: -webkit-transform 1s ease;
+	position: absolute;
+	top: 311px;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+}
+
+#SignInfo_Save:hover {
+	background-color: #ffda4f;
+	border-bottom: #ffa239 solid 3px;
+	color: #fef7dd;
+}
+
+.cp-color-picker {
+	background: #2a2b31 !important;
+	border: 3px solid #ffa239 !important;
+	border-radius: 0 !important;
+}
