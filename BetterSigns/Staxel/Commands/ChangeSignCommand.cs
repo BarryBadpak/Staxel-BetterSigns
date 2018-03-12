@@ -1,9 +1,9 @@
-﻿using BetterSigns.Staxel.Rendering;
-using BetterSigns.Staxel.TileState;
+﻿using BetterSigns.Staxel.TileState;
 using Microsoft.Xna.Framework;
 using Plukit.Base;
 using Staxel.Logic;
 using Staxel.Player;
+using Sunbeam.Staxel.Rendering.BitmapFont;
 
 namespace BetterSigns.Staxel.Commands
 {

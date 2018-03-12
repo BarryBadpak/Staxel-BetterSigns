@@ -1,6 +1,5 @@
 ﻿using BetterSigns.Staxel.Components;
 using BetterSigns.Staxel.Effects;
-using BetterSigns.Staxel.Rendering;
 using Microsoft.Xna.Framework;
 using Plukit.Base;
 using Staxel;
@@ -8,6 +7,8 @@ using Staxel.Items;
 using Staxel.Logic;
 using Staxel.Tiles;
 using Staxel.TileStates;
+using Sunbeam.Core.Helpers;
+using Sunbeam.Staxel.Rendering.BitmapFont;
 
 namespace BetterSigns.Staxel.TileState
 {

@@ -1,13 +1,9 @@
 ﻿using Staxel.Browser;
 using Sunbeam;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BetterSigns
 {
-    public class BetterSigns: SunbeamMod
+	public class BetterSigns: SunbeamMod
     {
 		public override string ModIdentifier => "BetterSigns";
 		public static BetterSigns Instance { get; private set; }
@@ -22,18 +18,9 @@ namespace BetterSigns
 		{
 			BetterSigns.Instance = this;
 
-			this.HTMLAsset = this.AssetLoader.ReadFileContent("UI/index.min.html").Replace('"', '\'');
-			this.JSAsset = this.AssetLoader.ReadFileContent("UI/main.min.js");
-			this.CSSAsset = this.AssetLoader.ReadFileContent("UI/style.min.css");
-		}
-
-		/// <summary>
-		/// Returns the mod directory
-		/// </summary>
-		/// <returns></returns>
-		public string GetModDirectory()
-		{
-			return this.AssetLoader.ModDirectory;
+			this.HTMLAsset = this.FileHelper.ReadFileContent("UI/index.min.html").Replace('"', '\'');
+			this.JSAsset = this.FileHelper.ReadFileContent("UI/main.min.js");
+			this.CSSAsset = this.FileHelper.ReadFileContent("UI/style.min.css");
 		}
 
 		/// <summary>
