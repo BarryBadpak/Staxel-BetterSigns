@@ -85,6 +85,9 @@
     <Content Include="BetterSigns.mod">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\index.html" />
     <Content Include="UI\jscolor.min.js" />
     <Content Include="UI\main.js" />
@@ -133,6 +136,7 @@
     <None Include="Assets\Models\WallSignGrey.qb" />
     <None Include="Assets\Models\WallSignPink.qb" />
     <None Include="Assets\Models\WallSignRed.qb" />
+    <None Include="Assets\Signs-EN-GB.lang" />
     <None Include="bundleconfig.json" />
     <None Include="packages.config" />
   </ItemGroup>

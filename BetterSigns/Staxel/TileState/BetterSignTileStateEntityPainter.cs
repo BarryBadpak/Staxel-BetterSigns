@@ -34,7 +34,7 @@ namespace BetterSigns.Staxel.TileState
 		/// <param name="renderTimestep"></param>
 		public override void BeforeRender(DeviceContext graphics, Vector3D renderOrigin, Entity entity, AvatarController avatarController, Timestep renderTimestep)
 		{
-			WorldTextRenderer.Init(graphics);
+			this.WorldTextRenderer.Init(graphics);
 
 			if (!this._textInitialized)
 			{

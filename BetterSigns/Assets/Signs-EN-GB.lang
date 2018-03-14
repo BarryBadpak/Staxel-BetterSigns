@@ -1,0 +1,50 @@
+language.code=en-GB
+language=English
+
+// Board translation
+mods.betterSigns.tiles.boardBlack.name=Signboard black
+mods.betterSigns.tiles.boardBlack.description=A writeable signboard
+mods.betterSigns.tiles.boardBlue.name=Signboard blue
+mods.betterSigns.tiles.boardBlue.description=A writeable signboard
+mods.betterSigns.tiles.boardBrown.name=Signboard brown
+mods.betterSigns.tiles.boardBrown.description=A writeable signboard
+mods.betterSigns.tiles.boardDarkBrown.name=Signboard dark brown
+mods.betterSigns.tiles.boardDarkBrown.description=A writeable signboard
+mods.betterSigns.tiles.boardGrey.name=Signboard grey
+mods.betterSigns.tiles.boardGrey.description=A writeable signboard
+mods.betterSigns.tiles.boardPink.name=Signboard pink
+mods.betterSigns.tiles.boardPink.description=A writeable signboard
+mods.betterSigns.tiles.boardRed.name=Signboard red
+mods.betterSigns.tiles.boardRed.description=A writeable signboard
+
+// Sign translation
+mods.betterSigns.tiles.signBlack.name=Sign black
+mods.betterSigns.tiles.signBlack.description=A writeable sign
+mods.betterSigns.tiles.signBlue.name=Sign blue
+mods.betterSigns.tiles.signBlue.description=A writeable sign
+mods.betterSigns.tiles.signBrown.name=Sign brown
+mods.betterSigns.tiles.signBrown.description=A writeable sign
+mods.betterSigns.tiles.signDarkBrown.name=Sign dark brown
+mods.betterSigns.tiles.signDarkBrown.description=A writeable sign
+mods.betterSigns.tiles.signGrey.name=Sign grey
+mods.betterSigns.tiles.signGrey.description=A writeable sign
+mods.betterSigns.tiles.signPink.name=Sign pink
+mods.betterSigns.tiles.signPink.description=A writeable sign
+mods.betterSigns.tiles.signRed.name=Sign red
+mods.betterSigns.tiles.signRed.description=A writeable sign
+
+// Wall sign translation
+mods.betterSigns.tiles.wallSignBlack.name=Wall sign black
+mods.betterSigns.tiles.wallSignBlack.description=A writeable wall mounted sign
+mods.betterSigns.tiles.wallSignBlue.name=Wall sign blue
+mods.betterSigns.tiles.wallSignBlue.description=A writeable wall mounted sign
+mods.betterSigns.tiles.wallSignBrown.name=Wall sign brown
+mods.betterSigns.tiles.wallSignBrown.description=A writeable wall mounted sign
+mods.betterSigns.tiles.wallSignDarkBrown.name=Wall sign dark brown
+mods.betterSigns.tiles.wallSignDarkBrown.description=A writeable wall mounted sign
+mods.betterSigns.tiles.wallSignGrey.name=Wall sign grey
+mods.betterSigns.tiles.wallSignGrey.description=A writeable wall mounted sign
+mods.betterSigns.tiles.wallSignPink.name=Wall sign pink
+mods.betterSigns.tiles.wallSignPink.description=A writeable wall mounted sign
+mods.betterSigns.tiles.wallSignRed.name=Wall sign red
+mods.betterSigns.tiles.wallSignRed.description=A writeable wall mounted sign
